@@ -2,9 +2,13 @@
 import sys
 
 dictionary = {}
+print()
+if len(sys.argv) == 1:
+    print('Parametros:\nUse -c para comprimir\nUse -u para descomprimir.')
 
-if sys.argv[1] == "-c":
+else:
+  if sys.argv[1] == "-c":
     print('comprimiendo')
 
-if sys.argv[1] == "-u":
-    print('descomprimiendo')
+  if sys.argv[1] == "-u":
+    print('descomprimiendo')  
