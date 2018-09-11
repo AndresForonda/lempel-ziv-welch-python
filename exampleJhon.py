@@ -2,8 +2,8 @@
 import sys
 import argparse #arguments management
 
-dictionary = {} #store dictionary
 
+#arguments management
 parser = argparse.ArgumentParser("compresor y descompresor lempel ziv")
 parser.add_argument(
     '-a',
@@ -14,6 +14,11 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+#variables
+dictionary = {} #store dictionary
+
+
+#algoritm
 if args.action == "c":
   print("comprimiendo")
 
