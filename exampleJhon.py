@@ -1,14 +1,21 @@
 #!/usr/bin/python3
 import sys
+import argparse #arguments management
 
-dictionary = {}
-print()
-if len(sys.argv) == 1:
-    print('Parametros:\nUse -c para comprimir\nUse -u para descomprimir.')
+dictionary = {} #store dictionary
 
-else:
-  if sys.argv[1] == "-c":
-    print('comprimiendo')
+parser = argparse.ArgumentParser("compresor y descompresor lempel ziv")
+parser.add_argument(
+    '-a',
+    '--action',
+    required=True,
+    help='Comprimir(c) o Descomprimir(u)',
+    choices=('c', 'u'),
+)
+args = parser.parse_args()
 
-  if sys.argv[1] == "-u":
-    print('descomprimiendo')  
+if args.action == "c":
+  print("comprimiendo")
+
+if args.action == "u":
+  print("descomprimiendo")
