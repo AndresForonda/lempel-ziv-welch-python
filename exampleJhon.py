@@ -38,7 +38,6 @@ for i in range(256):
 if args.action == "c":
   print("comprimiendo")
   text = args.file.read()
-  print(text)
   for letter in text:
     toCompare += letter
     if toCompare in dictionary:
@@ -46,9 +45,10 @@ if args.action == "c":
     else:
       dictionary[toCompare] = bin(toStoreInteger)
       toCompare = toCompare[-1]
+      toStoreInteger+=1
 
   for k in dictionary:
-    print(k,dictionary[k])
+    print(k,"\t\t",dictionary[k])
 
 
 
