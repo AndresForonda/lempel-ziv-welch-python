@@ -1,0 +1,1 @@
+numero maximo de bits =  17

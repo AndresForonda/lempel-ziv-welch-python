@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 import sys
 import argparse #arguments management
+import BitVector
+import io  
+            
+
+
 
 
 #arguments management
@@ -22,33 +27,60 @@ parser.add_argument(
 args = parser.parse_args()
 
 #variables
-dictionary = {} #store dictionary
+dictionary = {} 
 text = ""
 toCompare = ""
 toStoreInteger = 257
 
 
-#algoritm
+
+#algorithm
 
 #Preload ascii to dictionary
 for i in range(256):
-  dictionary[chr(i)] = bin(i)
+  bitString = bin(i)[2:]
+  dictionary[chr(i)] = BitVector.BitVector(bitstring = bitString)
 
-#compress algoritm
+#compress algorithm
 if args.action == "c":
-  print("comprimiendo")
+
+  
+
+
   text = args.file.read()
   for letter in text:
+
     toCompare += letter
     if toCompare in dictionary:
       continue
     else:
-      dictionary[toCompare] = bin(toStoreInteger)
+      bitString = bin(toStoreInteger)[2:]
+      dictionary[toCompare] = BitVector.BitVector(bitstring = bitString)
       toCompare = toCompare[-1]
       toStoreInteger+=1
 
-  for k in dictionary:
-    print(k,"\t\t",dictionary[k])
+  maxBinLenght = len( bin(toStoreInteger) ) - 2 #longitud del ultimo binario almacenado
+  print("numero maximo de bits = ",maxBinLenght)
+
+  for key in dictionary:
+    value = dictionary[key]
+    sizeToFill = maxBinLenght - value.length() 
+    zeroFill = BitVector.BitVector(size = sizeToFill )
+    value = zeroFill + value 
+    print(key,"\t\t:",value )
+
+#Restricciones importantes: longitud de bitstring multiplo de 8.
+# bv  =  BitVector.BitVector(bitstring = '000011') 
+# print( str(bv) )
+# FILEOUT = open('output.bits', 'wb')
+# bv.write_to_file(FILEOUT)
+# FILEOUT.close()
+
+# bv1  =  BitVector.BitVector(filename = 'output.bits')
+# BitVector.BitVector()
+# bis = bv1.length()
+# bv1 =  bv1.read_bits_from_file(bis)
+# print(bv1)
 
 
 
