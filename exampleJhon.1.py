@@ -4,10 +4,6 @@ import argparse #arguments management
 from bitarray import bitarray
 from collections import deque
  
-            
-
-
-
 
 #arguments management
 parser = argparse.ArgumentParser("compresor y descompresor lempel ziv")
@@ -32,12 +28,13 @@ args = parser.parse_args()
 
 
 #variables
-dictionary = {}
+
 
 
 
 #compress algorithm
 if args.compress:
+  dictionary = {}
   print("comprimiendo")
   #variables
   text = ""
@@ -100,45 +97,39 @@ if args.compress:
   fileBin = open('out.bits','wb')
   binaryFile.tofile(fileBin)
   fileBin.close()
+  for i in dictionary:
+    print( i,dictionary[i] )
 
 #uncompress algoritm
 if args.decompress:
+  dictionary = {}
+  
   #variables
   binaryFile = bitarray()
-  binaryFile.fromfile(args.decompress)
-  lenght = {'binary':bitarray(),'integer':0}
-  code = {'binary':bitarray(),'integer':0,'cadena':''}
+  binaryFile.fromfile(args.decompress) #Contiene el stream de bits
+  lenghtCodes = {'binary':bitarray(),'number':0} #Longitud de todos los codigos en binaryFile
+  code = {'chainBits':'','str':''} #Codigo indivitual(binario,numero,cadena)
+  textUncompress = ''
 
-  lenghtBynary = binaryFile[0:8]
-  lengtInt = ord( lenghtBynary.tostring() )
-  lenghtBynary = 0
-  dq = deque()
-  binaryCompare = bitarray()
-  intCompare = 0
+  #lenghtBynary = binaryFile[0:8]
+  lenghtCodes["binary"] = binaryFile[0:8]
+  #lengtInt = ord( lenghtBynary.tostring() )
+  lenghtCodes["number"] = ord( lenghtCodes["binary"].tostring() )
 
-  # #Preload ascii to dictionary
-  # for i in range(256):
-  #   bitString = bin(i)[2:]
-  #   dictionary[bitString] =  chr(i)
 
   #Preload ascii to dictionary int,character
-  for i in range(256):
-    dictionary[i] =  chr(i)
+  for i in range(256): 
+    bitString = bin(i)[2:]
+    numberZeros = lenghtCodes["number"] - len( bitString )
+    bitString = '0'*numberZeros + bitString
+    dictionary[ bitString ] =  chr(i) #diccionario (bits en string, cadena)
+
 
   
-  
-  for i in range(8, len(binaryFile) ,lengtInt):
-    binary = binaryFile[i:i+lengtInt]
-    binaryCompare += binary
-    intCompare = int(binary.to01(),2)
-    #print(binary)
-    print( intCompare   )
-    if intCompare in dictionary:
-      continue:
-    else:
-      intCompare = int(binaryCompare.to01(),2)
-      dictionary[intCompare] = 
-    
-  # for i in dictionary:
-  #   print(i,dictionary[i])
-  # print()
+  for i in range(8, binaryFile.length() - lenghtCodes["number"] ,lenghtCodes["number"]):
+    code["chainBits"] = binaryFile[i:i+lenghtCodes["number"]].to01()
+    if code["chainBits"] in dictionary:
+      code["str"] = dictionary[ code["chainBits"] ]
+      textUncompress += code["str"]
+
+  print(textUncompress)
