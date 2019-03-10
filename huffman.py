@@ -1,7 +1,6 @@
-import heapq
+from heapq import heapify, heappush, heappop
 import argparse  # arguments management
 from collections import Counter
-import json
 from collections import deque
 
 
@@ -14,13 +13,13 @@ def getProbabilityTable(text):
 
 
 def make_tree(probs):
-    heapq.heapify(probs)
+    heapify(probs)
     while len(probs) > 1:
 
-        e1 = heapq.heappop(probs)  # El símbolo menos probable
-        e2 = heapq.heappop(probs)  # El segundo menos probable
+        e1 = heappop(probs)  # El símbolo menos probable
+        e2 = heappop(probs)  # El segundo menos probable
         nw_e = [e1[0] + e2[0], "", deque([e1, e2])]
-        heapq.heappush(probs, nw_e)
+        heappush(probs, nw_e)
 
 
 def followBranch(branch):
@@ -61,13 +60,13 @@ args = parser.parse_args()
 
 
 if args.compress:
-    print("comprimiendo")
+    # print("comprimiendo")
     probabilityTable = {}
     text = args.compress.read()  # texto del archivo a comprimir
     # making probabilityTable
     probabilityTable = getProbabilityTable(text)
-    print(json.dumps(probabilityTable))
-    print(len(probabilityTable))
+    # print(json.dumps(probabilityTable))
+    # print(len(probabilityTable))
     make_tree(probabilityTable)
     # print(json.dumps(probabilityTable))
     followBranch(probabilityTable[0])
