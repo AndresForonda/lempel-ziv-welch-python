@@ -2,7 +2,7 @@ import heapq
 import argparse  # arguments management
 from collections import Counter
 import json
-import threading
+from collections import deque
 
 
 def getProbabilityTable(text):
@@ -19,12 +19,12 @@ def make_tree(probs):
 
         e1 = heapq.heappop(probs)  # El símbolo menos probable
         e2 = heapq.heappop(probs)  # El segundo menos probable
-        nw_e = [e1[0] + e2[0], "", [e1, e2]]
+        nw_e = [e1[0] + e2[0], "", deque([e1, e2])]
         heapq.heappush(probs, nw_e)
 
 
 def followBranch(branch):
-    if type(branch[2]) is list and len(branch[2]) == 2:
+    if type(branch[2]) is deque and len(branch[2]) == 2:
         branch0 = branch[2].pop()
         branch0[1] = ''.join([branch[1], "0"])
         branch1 = branch[2].pop()
@@ -69,7 +69,7 @@ if args.compress:
     print(json.dumps(probabilityTable))
     print(len(probabilityTable))
     make_tree(probabilityTable)
-    print(json.dumps(probabilityTable))
+    # print(probabilityTable)
     followBranch(probabilityTable[0])
 
 
