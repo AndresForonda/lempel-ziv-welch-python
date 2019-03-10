@@ -69,7 +69,7 @@ if args.compress:
     print(json.dumps(probabilityTable))
     print(len(probabilityTable))
     make_tree(probabilityTable)
-    print(json.dumps(probabilityTable))
+    # print(json.dumps(probabilityTable))
     followBranch(probabilityTable[0])
 
 
