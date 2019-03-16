@@ -1,4 +1,3 @@
-
 import argparse  # arguments management
 from bitarray import bitarray
 from collections import deque
@@ -14,7 +13,7 @@ def printDictionary(dictionary):
             print(key, ":" + value + ":")
 
 
-def getStringFromBeginBinaryCode(begin, lenghtCode, dictionary):
+def getStringFromBeginBinaryCode(begin, lenghtCode, dictionary, binaryFile):
     code = binaryFile[begin:begin + lenghtCode]
     codeInt = int(code.to01(), 2)
     stringFromCode = dictionary.get(codeInt)
@@ -42,9 +41,7 @@ args = parser.parse_args()
 
 # variables
 
-
-# compress algorithm
-if args.compress:
+def compress(fileCompress):
     dictionary = {}
     print("comprimiendo")
     # variables
@@ -61,7 +58,7 @@ if args.compress:
         dictionary[chr(i)] = bitarray(bitString)
 
     # algorithm
-    text = args.compress.read()  # texto del archivo a comprimir
+    text = fileCompress.read()  # texto del archivo a comprimir
     for letter in text:
         toCompare += letter
         # print(str(toCompare in dictionary)+":"+toCompare+":"+toCompare[:-1])
@@ -115,10 +112,8 @@ if args.compress:
     fileBin.close()
 
 
-# uncompress algoritm
-if args.decompress:
-    print("descomprimiendo")
-    # variables
+def decompress():
+        # variables
     binaryFile = bitarray()
     dictionary = {}
 
@@ -133,11 +128,12 @@ if args.decompress:
     decompressed = ''
     key = 257
     lastString = ''
-    lastString = getStringFromBeginBinaryCode(8, lenghtCode, dictionary)
+    lastString = getStringFromBeginBinaryCode(
+        8, lenghtCode, dictionary, binaryFile)
     decompressed += lastString
     for begin in range(8 + lenghtCode, binaryFile.length() - lenghtCode, lenghtCode):
         inputString = getStringFromBeginBinaryCode(
-            begin, lenghtCode, dictionary)
+            begin, lenghtCode, dictionary, binaryFile)
 
         if inputString:
             dictionary[key] = lastString + inputString[0]
@@ -150,3 +146,13 @@ if args.decompress:
         key += 1
     with open('result', 'w') as file:
         file.write(decompressed)
+
+# compress algorithm
+if args.compress:
+    compress(args.compress)
+
+
+# uncompress algoritm
+if args.decompress:
+    print("descomprimiendo")
+    decompress()
