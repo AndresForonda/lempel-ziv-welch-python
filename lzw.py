@@ -26,7 +26,6 @@ group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument(
     '-d',
     '--decompress',
-    type=argparse.FileType('rb'),
     help='Archivo a descomprimir',
 )
 group.add_argument(
@@ -112,7 +111,7 @@ def compress(fileCompress):
     fileBin.close()
 
 
-def decompress():
+def decompress(fileDeCompress):
         # variables
     binaryFile = bitarray()
     dictionary = {}
@@ -121,7 +120,7 @@ def decompress():
     for i in range(256):
         dictionary[i] = chr(i)
 
-    with open('out.bits', 'rb') as fileBits:
+    with open(fileDeCompress, 'rb') as fileBits:
         binaryFile.fromfile(fileBits)
     # Archivo binario a descomprimir
     lenghtCode = int(binaryFile[0:8].to01(), 2)  # longitud de los codigo
@@ -155,4 +154,4 @@ if args.compress:
 # uncompress algoritm
 if args.decompress:
     print("descomprimiendo")
-    decompress()
+    decompress(args.decompress)
