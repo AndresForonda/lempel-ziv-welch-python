@@ -35,6 +35,11 @@ group.add_argument(
     help='Archivo a comprimir ',
     required=False,
 )
+parser.add_argument(
+    '-f',
+    '--file',
+    help='Archivo de salida'
+)
 args = parser.parse_args()
 
 
@@ -106,7 +111,7 @@ def compress(fileCompress):
         binaryFile += value
 
     # escribir archivo binario
-    fileBin = open('out.bits', 'wb')
+    fileBin = open(args.file, 'wb')
     binaryFile.tofile(fileBin)
     fileBin.close()
 
@@ -143,7 +148,7 @@ def decompress(fileDeCompress):
             decompressed += dictionary[key]
             lastString = dictionary[key]
         key += 1
-    with open('result', 'w') as file:
+    with open(args.file, 'w') as file:
         file.write(decompressed)
 
 # compress algorithm
