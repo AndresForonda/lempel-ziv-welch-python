@@ -7,8 +7,7 @@ from collections import Counter
 from collections import deque
 from functools import partial
 from itertools import accumulate
-
-# import json
+import json
 
 
 def getProbabilityTable(text):
@@ -66,6 +65,13 @@ group.add_argument(
     help='Archivo a comprimir ',
     required=False,
 )
+parser.add_argument(
+    '-i',
+    '--inputDictionary',
+    type=argparse.FileType('r', encoding='utf-8-sig'),
+    help='diccionario para descomprimir ',
+    required=False,
+)
 args = parser.parse_args()
 
 
@@ -81,7 +87,8 @@ if args.compress:
     make_tree(probabilityTable)
     # print(probabilityTable)
     followBranch(probabilityTable[0], dictionary)
-    print(dictionary)
+    with open('dictHuffman', 'w') as fileBin:
+        fileBin.write(json.dumps(dictionary))
 
     compressLetter = partial(getLetterCompress, dictionary)
 
@@ -90,3 +97,38 @@ if args.compress:
     binaryFile = bitarray(restString)
     with open('outHuffman.bits', 'wb') as fileBin:
         binaryFile.tofile(fileBin)
+
+
+def getDecompress(binaryStream, dictionary):
+    decompress = ""
+    compare = ""
+    for bit in binaryStream:
+
+        compare += str(int(bit))
+
+        compareInDictionary = dictionary.get(compare)
+        if compareInDictionary:
+
+            decompress += compareInDictionary
+            compare = ""
+    return decompress
+
+
+def decompress(inputDictionary,):
+    # Obteniendo diccionario
+    dictionary = {}
+
+    binaryFile = bitarray()
+    with open(inputDictionary.name[2:], 'r') as fileDict:
+        dictionary = json.load(fileDict)
+    dictionary = {v: k for k, v in dictionary.items()}
+
+    with open('outHuffman.bits', 'rb') as fileBin:
+        binaryFile.fromfile(fileBin)
+    textDecompressed = getDecompress(binaryFile, dictionary)
+
+    with open('decompressedHufmman', 'w') as decompressed:
+        decompressed.write(textDecompressed)
+
+if args.decompress:
+    decompress(args.inputDictionary)
